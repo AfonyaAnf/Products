@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Products</string>
+    <string name="action_settings">Settings</string>
+    <string name="count">Количество</string>
+    <string name="price">Цена</string>
+    <string name="name">Наименование</string>
+    <string name="product_list">Список товаров</string>
+    <string name="product">Товар</string>
+    <string name="edit_product">Описание товара</string>
+    <string name="add_product">Добавить товар</string>
+    <string name="delete">Удалить</string>
+    <string name="edit">Редактировать</string>
+    <string name="product_editing">Редактирование товара</string>
+</resources>
