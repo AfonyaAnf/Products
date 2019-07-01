@@ -2,6 +2,7 @@ package com.products.ui.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import com.products.ProductRepository
+import com.products.R
 import com.products.SingleLiveEvent
 import com.products.model.Product
 import com.products.repository.toStringOrEmpty
@@ -22,23 +23,14 @@ class DetailProductViewModel @Inject constructor(
     val nameLiveData = MutableLiveData<String>()
     val countLiveData = MutableLiveData<String>()
     val priceLiveData = MutableLiveData<String>()
+    val titleLiveData = MutableLiveData<Int>()
     val closeScreen = SingleLiveEvent<Unit>()
 
     var params: DetailParams? = null
         set(value) {
             field = value
-            value?.id?.let {
-                disposables.add(
-                    productRepository.get(it)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe({
-                            nameLiveData.value = it.name
-                            priceLiveData.value = it.price.toStringOrEmpty()
-                            countLiveData.value = it.count.toStringOrEmpty()
-                        }, {})
-                )
-            }
+            updateFields()
+            updateTitle()
         }
 
     fun save(name: String, count: String, price: String) {
@@ -54,6 +46,28 @@ class DetailProductViewModel @Inject constructor(
                     closeScreen.call()
                 }, {})
         )
+    }
+
+    private fun updateFields() {
+        params?.id?.let {
+            disposables.add(
+                productRepository.get(it)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        nameLiveData.value = it.name
+                        priceLiveData.value = it.price.toStringOrEmpty()
+                        countLiveData.value = it.count.toStringOrEmpty()
+                    }, {})
+            )
+        }
+    }
+
+    private fun updateTitle() {
+        when (params?.mode) {
+            Mode.CREATE -> titleLiveData.postValue(R.string.add_product)
+            Mode.EDIT -> titleLiveData.postValue(R.string.edit_product)
+        }
     }
 }
 

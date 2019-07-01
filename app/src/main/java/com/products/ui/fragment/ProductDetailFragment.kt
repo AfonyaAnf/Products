@@ -4,13 +4,12 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.view.*
 import com.products.R
-import com.products.ui.viewmodel.ViewModelFactory
 import com.products.di.CommonComponent
 import com.products.repository.injectViewModel
 import com.products.ui.NavigationManager
 import com.products.ui.viewmodel.DetailParams
 import com.products.ui.viewmodel.DetailProductViewModel
-import com.products.ui.viewmodel.Mode
+import com.products.ui.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.layout_appbar.*
 import javax.inject.Inject
@@ -56,15 +55,8 @@ class ProductDetailFragment : BaseFragment() {
         viewModel.countLiveData.observe(viewLifecycleOwner, Observer { editCount.setText(it) })
         viewModel.priceLiveData.observe(viewLifecycleOwner, Observer { editPrice.setText(it) })
         viewModel.closeScreen.observe(viewLifecycleOwner, Observer { navigationManager.navigateBack() })
+        viewModel.titleLiveData.observe(viewLifecycleOwner, Observer { it?.let { toolbar.setTitle(it) } })
         viewModel.params = detailParams
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        when (detailParams?.mode) {
-            Mode.CREATE -> toolbar.setTitle(R.string.add_product)
-            Mode.EDIT -> toolbar.setTitle(R.string.edit_product)
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
